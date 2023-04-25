@@ -1,26 +1,61 @@
 #pragma once
 #include <string>
+#include <vector>
+#include <set>
 
 namespace GeneralTree {
 
+	/*Represents a point on a tree.
+	Using the left-child/right-sibling method therefore
+	only these values are needed to traverse the respected tree*/
 	template<class T> class Node {
+	public:
+		//Unique ID
 		std::string key;
+
+		//Data inside node
 		T value;
+
+		//Surrounding nodes
 		Node<T>* lChild;
 		Node<T>* rSibling;
 
-	public:
-		Node(std::string name, T data) : key(name), value(data) {};
+		//Constructor
+		Node(std::string name, T data) : 
+			key(name), value(data), lChild(0), rSibling(0) {};
+		
 		inline T getValue() { return value; };
 	};
 
-	template<class T> class Tree {
-		friend class Node<T>;
-		Node<T>* rootNode;
+	enum class SearchMethods {
+		DFS,
+		BFS
+	};
 
+	/*Represents a collection of nodes linked together
+	via their left-most child and right siblings*/
+	template<class T> class Tree {
+		//Allows the use of the nodes members
+		friend class Node<T>;
+		
+		//Top of the tree
+		Node<T>* rootNode;
+		//Generates a pointer to a new node
 		Node<T>* newNode(std::string, T);
+
+		Node<T>* depthFirstSearch(std::string);
 	public:
+		//Constructors
 		Tree();
 		Tree(Node<T>* root) : rootNode(root) {};
+
+		//Add nodes to existing nodes
+		void addSibling(Node<T>*, std::string, T);
+		void addChild(Node<T>*, std::string, T);
+
+		Node<T>* find(SearchMethods, std::string);
+
+		//Getters
+		Node<T>* getRoot() { return rootNode; };
 	};
 }
