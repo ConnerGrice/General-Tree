@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <set>
+#include <stack>
 
 namespace GeneralTree {
 
@@ -23,7 +24,13 @@ namespace GeneralTree {
 		//Constructor
 		Node(std::string name, T data) : 
 			key(name), value(data), lChild(0), rSibling(0) {};
+		//Default constructor
 		
+		//Destructor
+		//Copy Assignment
+		//Copy constructor
+		//Move constructor
+		//Move assignment
 		inline T getValue() { return value; };
 	};
 
@@ -48,7 +55,13 @@ namespace GeneralTree {
 		//Constructors
 		Tree();
 		Tree(Node<T>* root) : rootNode(root) {};
-
+		//Destructor
+		//Copy Assignment
+		//Copy constructor
+		//Move constructor
+		//Move assignment
+		
+		std::vector<Node<T>*> scan();
 		//Add nodes to existing nodes
 		void addSibling(Node<T>*, std::string, T);
 		void addChild(Node<T>*, std::string, T);

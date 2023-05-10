@@ -11,4 +11,6 @@
 #include "../GeneralTree/GeneralTree.h"
 #include "../GeneralTree/GeneralTree.cpp"
 
+#include <stdexcept>
+
 #endif //PCH_H

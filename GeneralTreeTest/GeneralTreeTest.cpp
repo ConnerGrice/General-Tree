@@ -8,7 +8,7 @@ namespace GeneralTreeTest
 	TEST_CLASS(GeneralTreeTest)
 	{
 	public:
-		
+		/*Ability to add nodes*/
 		TEST_METHOD(addNodes) {
 			GeneralTree::Tree<int> t;
 			auto root = t.getRoot();
@@ -20,6 +20,7 @@ namespace GeneralTreeTest
 			Assert::IsTrue(root->lChild->rSibling->rSibling->rSibling);
 		}
 
+		/*Simple search using depth first*/
 		TEST_METHOD(depthSearchSimple) {
 			GeneralTree::Tree<int> t;
 			auto root = t.getRoot();
@@ -30,6 +31,7 @@ namespace GeneralTreeTest
 			Assert::AreEqual(5,node->value);
 		}
 
+		/*More complex search using depth search*/
 		TEST_METHOD(depthSearchComplex) {
 			GeneralTree::Tree<int> t;
 			auto root = t.getRoot();
@@ -43,6 +45,44 @@ namespace GeneralTreeTest
 			t.addChild(node,"Sixth",9);
 			t.addChild(node,"Seventh",3);
 			Assert::IsNotNull(t.find(GeneralTree::SearchMethods::DFS, "Fourth"));
+		}
+
+		/*Execption for node not found*/
+		TEST_METHOD(depthSearchNull) {
+			GeneralTree::Tree<int> t;
+			auto root = t.getRoot();
+			t.addChild(root, "First", 3);
+			t.addChild(root, "Second", 4);
+			t.addChild(root, "Third", 5);
+			auto node = t.find(GeneralTree::SearchMethods::DFS, "Second");
+			t.addChild(node, "Fourth", 6);
+			t.addChild(node, "Fifth", 8);
+			node = node->lChild;
+			t.addChild(node, "Sixth", 9);
+			t.addChild(node, "Seventh", 3);
+
+			auto func = [&] { t.find(GeneralTree::SearchMethods::DFS, "NotReal"); };
+			Assert::ExpectException<std::invalid_argument>(func);
+		}
+
+		TEST_METHOD(postOrderTest) {
+			GeneralTree::Tree<int> t;
+			auto root = t.getRoot();
+			t.addChild(root, "A", 3);
+			t.addChild(root, "B", 2);
+			t.addChild(root, "C", 4);
+			auto node = t.find(GeneralTree::SearchMethods::DFS, "A");
+			t.addChild(node, "D", 5);
+			t.addChild(node, "E", 6);
+			auto result = t.scan();
+
+			std::vector<int> given;
+			for (const auto& item : result) {
+				given.push_back(item->getValue());
+			}
+			std::vector<int> expected{ 4,2,6,5,3,0 };
+
+			Assert::IsTrue(expected == given);
 		}
 	};
 }
