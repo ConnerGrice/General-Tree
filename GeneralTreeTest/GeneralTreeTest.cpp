@@ -81,7 +81,6 @@ namespace GeneralTreeTest
 				given.push_back(item->getValue());
 			}
 			std::vector<int> expected{ 4,2,6,5,3,0 };
-
 			Assert::IsTrue(expected == given);
 		}
 	};

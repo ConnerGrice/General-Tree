@@ -24,13 +24,9 @@ namespace GeneralTree {
 		//Constructor
 		Node(std::string name, T data) : 
 			key(name), value(data), lChild(0), rSibling(0) {};
-		//Default constructor
-		
-		//Destructor
-		//Copy Assignment
-		//Copy constructor
-		//Move constructor
-		//Move assignment
+
+		bool operator==(const Node<T>&);
+
 		inline T getValue() { return value; };
 	};
 
@@ -52,16 +48,14 @@ namespace GeneralTree {
 
 		Node<T>* depthFirstSearch(std::string);
 	public:
+		std::vector<Node<T>*> scan();
 		//Constructors
 		Tree();
 		Tree(Node<T>* root) : rootNode(root) {};
 		//Destructor
-		//Copy Assignment
-		//Copy constructor
-		//Move constructor
-		//Move assignment
+		~Tree();
+
 		
-		std::vector<Node<T>*> scan();
 		//Add nodes to existing nodes
 		void addSibling(Node<T>*, std::string, T);
 		void addChild(Node<T>*, std::string, T);

@@ -7,6 +7,10 @@
 
 namespace GeneralTree {
 
+	template<class T> bool Node<T>::operator==(const Node<T>& other) {
+		return key == other.key && lChild == other.lChild && rSibling == other.rSibling;
+	}
+
 	template<class T> Node<T>* Tree<T>::newNode(std::string name, T data) {
 		auto node = new Node<T>(name, data);
 		return node;
@@ -44,6 +48,10 @@ namespace GeneralTree {
 		return output;
 	}
 
+	template<class T> Tree<T>::~Tree() {
+		//TODO: Destructor
+	}
+
 	template<class T> void Tree<T>::addSibling(
 		Node<T>* child, std::string name, T value) {
 
@@ -66,7 +74,6 @@ namespace GeneralTree {
 	}
 
 	template<class T> Node<T>* Tree<T>::depthFirstSearch(std::string key) {
-	
 		std::vector<Node<T>*> stack{ rootNode };
 		std::set<Node<T>*> visited;
 
@@ -99,7 +106,6 @@ namespace GeneralTree {
 		}
 		//Node not found
 		throw std::invalid_argument("Node not FOUND. Please give a value key");
-		
 	}
 
 	template<class T> Node<T>* Tree<T>::find(SearchMethods method, std::string key) {
