@@ -20,6 +20,18 @@ namespace GeneralTreeTest
 			Assert::IsTrue(root->getChild()->getSibling()->getSibling()->getSibling()->value);
 		}
 
+		TEST_METHOD(addNewChild) {
+			GeneralTree::Tree<int> t;
+			auto root = t.getRoot();
+			t.addChild(root, "First", 3);
+			t.addChild(root, "Second", 4);
+			t.addChild(root, "Third", 5);
+			auto node = root->getChild()->getSibling()->getSibling();
+			std::shared_ptr<GeneralTree::Node<int>> newN(new GeneralTree::Node<int>("NewNode", -1));
+			t.addSibling(node, newN);
+			Assert::IsTrue(root->getChild()->getSibling()->getSibling()->getSibling()->value);
+		}
+
 		/*Simple search using depth first*/
 		TEST_METHOD(depthSearchSimple) {
 			GeneralTree::Tree<int> t;

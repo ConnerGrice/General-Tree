@@ -9,17 +9,24 @@ namespace GeneralTree {
 
 	template<class T>
 	bool Node<T>::operator==(const Node<T>& other) {
-		return key == other.key && lChild == other.lChild && rSibling == other.rSibling;
+		return key == other.key &&
+			lChild == other.lChild &&
+			rSibling == other.rSibling &&
+			parent == other.parent;
 	}
 
 	template<class T>
 	bool Node<T>::operator!=(const Node<T>& other) {
-		return key != other.key || lChild != other.lChild || rSibling != other.rSibling;
+		return key != other.key ||
+			lChild != other.lChild ||
+			rSibling != other.rSibling ||
+			parent != other.parent;
 	}
 
 	template<class T>
-	std::shared_ptr<Node<T>> Tree<T>::newNode(std::string name, T data) {
-		std::shared_ptr<Node<T>> node(new Node<T>(name, data));
+	std::shared_ptr<Node<T>> Tree<T>::newNode(
+		std::shared_ptr<Node<T>> parent,std::string name, T data) {
+		std::shared_ptr<Node<T>> node(new Node<T>(parent,name, data));
 		return node;
 	}
 
@@ -56,11 +63,29 @@ namespace GeneralTree {
 	void Tree<T>::addSibling(
 		std::shared_ptr<Node<T>> child, std::string name, T value) {
 
+		auto parent = child->parent;
+		if (!parent)
+			return;
+
 		//Go to the last sibling
 		while (child->rSibling)
 			child = child->rSibling;
 
-		child->rSibling = newNode(name, value);
+		child->rSibling = newNode(parent,name, value);
+	}
+
+	template<class T>
+	void Tree<T>::addSibling(
+		std::shared_ptr<Node<T>> child, std::shared_ptr<Node<T>> sibling) {
+
+		auto parent = child->parent;
+		if (!parent)
+			return;
+		sibling->parent = parent;
+		while (child->rSibling)
+			child = child->rSibling;
+
+		child->rSibling = sibling;
 	}
 
 	template<class T>
@@ -71,7 +96,17 @@ namespace GeneralTree {
 		if (parent->lChild)
 			addSibling(parent->lChild, name, value);
 		else
-			parent->lChild = newNode(name, value);
+			parent->lChild = newNode(parent,name, value);
+	}
+
+	template<class T>
+	void Tree<T>::addChild(
+		std::shared_ptr<Node<T>> parent, std::shared_ptr<Node<T>> child) {
+		child->parent = parent;
+		if (parent->lChild)
+			addSibling(parent->lChild, child);
+		else
+			parent->lChild = child;
 	}
 
 	template<class T>
@@ -156,5 +191,7 @@ namespace GeneralTree {
 			return depthFirstSearch(key);
 		else if (method == SearchMethods::BFS)
 			return breadthFirstSearch(key);
+		else
+			throw std::invalid_argument("Please give a valid search method");
 	}
 }
