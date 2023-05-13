@@ -15,9 +15,9 @@ namespace GeneralTreeTest
 			t.addChild(root, "First", 3);
 			t.addChild(root, "Second", 4);
 			t.addChild(root, "Third", 5);
-			auto node = root->lChild->rSibling->rSibling;
+			auto node = root->getChild()->getSibling()->getSibling();
 			t.addSibling(node, "Fourth", 6);
-			Assert::IsTrue(root->lChild->rSibling->rSibling->rSibling->value);
+			Assert::IsTrue(root->getChild()->getSibling()->getSibling()->getSibling()->value);
 		}
 
 		/*Simple search using depth first*/
@@ -41,7 +41,7 @@ namespace GeneralTreeTest
 			auto node = t.find(GeneralTree::SearchMethods::DFS, "Second");
 			t.addChild(node,"Fourth",6);
 			t.addChild(node,"Fifth",8);
-			node = node->lChild;
+			node = node->getChild();
 			t.addChild(node,"Sixth",9);
 			t.addChild(node,"Seventh",3);
 			Assert::IsNotNull(t.find(GeneralTree::SearchMethods::DFS, "Fourth").get());
@@ -57,7 +57,7 @@ namespace GeneralTreeTest
 			auto node = t.find(GeneralTree::SearchMethods::DFS, "Second");
 			t.addChild(node, "Fourth", 6);
 			t.addChild(node, "Fifth", 8);
-			node = node->lChild;
+			node = node->getChild();
 			t.addChild(node, "Sixth", 9);
 			t.addChild(node, "Seventh", 3);
 

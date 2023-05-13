@@ -7,21 +7,23 @@
 #include <memory>
 
 namespace GeneralTree {
+	template<class T> class Tree;
 
 	/*Represents a point on a tree.
 	Using the left-child/right-sibling method therefore
 	only these values are needed to traverse the respected tree*/
 	template<class T> class Node {
-	public:
+		friend Tree<T>;
+		
 		//Unique ID
 		std::string key;
-
-		//Data inside node
-		T value;
-
 		//Surrounding nodes
 		std::shared_ptr<Node<T>> lChild;
 		std::shared_ptr<Node<T>> rSibling;
+	public:
+
+		//Data inside node
+		T value;
 
 		//Constructor
 		Node(std::string name, T data) : 
@@ -30,6 +32,9 @@ namespace GeneralTree {
 		//Comparison
 		bool operator==(const Node<T>&);
 		bool operator!=(const Node<T>&);
+
+		std::shared_ptr<Node<T>> getChild() { return lChild; };
+		std::shared_ptr<Node<T>> getSibling() { return rSibling; };
 	};
 
 	/*Represents the different methods of searching the tree.*/
@@ -41,8 +46,6 @@ namespace GeneralTree {
 	/*Represents a collection of nodes linked together
 	via their left-most child and right siblings*/
 	template<class T> class Tree {
-		//Allows the use of the nodes members
-		friend class Node<T>;
 		
 		std::shared_ptr<Node<T>> rootNode;
 		
