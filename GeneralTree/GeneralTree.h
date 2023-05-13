@@ -3,6 +3,8 @@
 #include <vector>
 #include <set>
 #include <stack>
+#include <queue>
+#include <memory>
 
 namespace GeneralTree {
 
@@ -18,21 +20,22 @@ namespace GeneralTree {
 		T value;
 
 		//Surrounding nodes
-		Node<T>* lChild;
-		Node<T>* rSibling;
+		std::shared_ptr<Node<T>> lChild;
+		std::shared_ptr<Node<T>> rSibling;
 
 		//Constructor
 		Node(std::string name, T data) : 
 			key(name), value(data), lChild(0), rSibling(0) {};
 
+		//Comparison
 		bool operator==(const Node<T>&);
-
-		inline T getValue() { return value; };
+		bool operator!=(const Node<T>&);
 	};
 
+	/*Represents the different methods of searching the tree.*/
 	enum class SearchMethods {
-		DFS,
-		BFS
+		DFS, //Depth first search
+		BFS	//Breadth first search
 	};
 
 	/*Represents a collection of nodes linked together
@@ -41,28 +44,30 @@ namespace GeneralTree {
 		//Allows the use of the nodes members
 		friend class Node<T>;
 		
-		//Top of the tree
-		Node<T>* rootNode;
-		//Generates a pointer to a new node
-		Node<T>* newNode(std::string, T);
-
-		Node<T>* depthFirstSearch(std::string);
-	public:
-		std::vector<Node<T>*> scan();
-		//Constructors
-		Tree();
-		Tree(Node<T>* root) : rootNode(root) {};
-		//Destructor
-		~Tree();
-
+		std::shared_ptr<Node<T>> rootNode;
 		
+		std::shared_ptr<Node<T>> newNode(std::string, T);
+
+		//Search methods
+		std::shared_ptr<Node<T>> depthFirstSearch(std::string);
+		std::shared_ptr<Node<T>> breadthFirstSearch(std::string);
+	
+	public:
+		//Constructors
+		Tree() : rootNode(newNode("Root", 0)) {};
+		Tree(std::shared_ptr<Node<T>> root) : rootNode(root) {};
+		Tree(std::string key, T value) : rootNode(newNode(key, value)) {};
+
 		//Add nodes to existing nodes
-		void addSibling(Node<T>*, std::string, T);
-		void addChild(Node<T>*, std::string, T);
+		void addSibling(std::shared_ptr<Node<T>>, std::string, T);
+		void addChild(std::shared_ptr<Node<T>>, std::string, T);
 
-		Node<T>* find(SearchMethods, std::string);
-
-		//Getters
-		Node<T>* getRoot() { return rootNode; };
+		//Return a node given a unique key
+		std::shared_ptr<Node<T>> find(SearchMethods, std::string);
+		
+		//Get list of nodes in the post-order order
+		std::vector<std::shared_ptr<Node<T>>> scan();
+		
+		std::shared_ptr<Node<T>> getRoot() { return rootNode; };
 	};
 }

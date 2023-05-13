@@ -17,7 +17,7 @@ namespace GeneralTreeTest
 			t.addChild(root, "Third", 5);
 			auto node = root->lChild->rSibling->rSibling;
 			t.addSibling(node, "Fourth", 6);
-			Assert::IsTrue(root->lChild->rSibling->rSibling->rSibling);
+			Assert::IsTrue(root->lChild->rSibling->rSibling->rSibling->value);
 		}
 
 		/*Simple search using depth first*/
@@ -44,7 +44,7 @@ namespace GeneralTreeTest
 			node = node->lChild;
 			t.addChild(node,"Sixth",9);
 			t.addChild(node,"Seventh",3);
-			Assert::IsNotNull(t.find(GeneralTree::SearchMethods::DFS, "Fourth"));
+			Assert::IsNotNull(t.find(GeneralTree::SearchMethods::DFS, "Fourth").get());
 		}
 
 		/*Execption for node not found*/
@@ -78,10 +78,21 @@ namespace GeneralTreeTest
 
 			std::vector<int> given;
 			for (const auto& item : result) {
-				given.push_back(item->getValue());
+				given.push_back(item->value);
 			}
 			std::vector<int> expected{ 4,2,6,5,3,0 };
 			Assert::IsTrue(expected == given);
+		}
+
+		/*Simple search using depth first*/
+		TEST_METHOD(breadthSearchSimple) {
+			GeneralTree::Tree<int> t;
+			auto root = t.getRoot();
+			t.addChild(root, "First", 3);
+			t.addChild(root, "Second", 4);
+			t.addChild(root, "Third", 5);
+			auto node = t.find(GeneralTree::SearchMethods::BFS, "Third");
+			Assert::AreEqual(5, node->value);
 		}
 	};
 }
