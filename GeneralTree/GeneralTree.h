@@ -5,6 +5,7 @@
 #include <stack>
 #include <queue>
 #include <memory>
+#include <stdexcept>
 
 namespace GeneralTree {
 	template<class T> class Tree;
@@ -52,8 +53,7 @@ namespace GeneralTree {
 	/*Represents a collection of nodes linked together
 	via their left-most child and right siblings*/
 	template<class T> class Tree {
-		
-		
+
 		std::shared_ptr<Node<T>> newNode(std::shared_ptr<Node<T>>,std::string, T);
 
 		std::shared_ptr<Node<T>> rootNode;
