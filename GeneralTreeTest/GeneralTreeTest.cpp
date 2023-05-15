@@ -106,5 +106,46 @@ namespace GeneralTreeTest
 			auto node = t.find(GeneralTree::SearchMethods::BFS, "Third");
 			Assert::AreEqual(5, node->value);
 		}
+
+		TEST_METHOD(iteratorPreIncrementingTest) {
+			GeneralTree::Tree<int> t;
+			auto root = t.getRoot();
+			t.addChild(root, "A", 3);
+			t.addChild(root, "B", 2);
+			t.addChild(root, "C", 4);
+			auto node = t.find(GeneralTree::SearchMethods::DFS, "A");
+			t.addChild(node, "D", 5);
+			t.addChild(node, "E", 6);
+
+			std::vector < std::string> results;
+
+			GeneralTree::Tree<int>::ForwardIterator iter;
+			for (iter = t.begin(); iter != t.end();++iter) {
+				results.push_back(iter->getKey());
+			}
+			std::vector<std::string> expected{ "Root","C","B","A","E","D" };
+			Assert::IsTrue(expected == results);
+		}
+
+		TEST_METHOD(iteratorPostIncrementingTest) {
+			GeneralTree::Tree<int> t;
+			auto root = t.getRoot();
+			t.addChild(root, "A", 3);
+			t.addChild(root, "B", 2);
+			t.addChild(root, "C", 4);
+			auto node = t.find(GeneralTree::SearchMethods::DFS, "A");
+			t.addChild(node, "D", 5);
+			t.addChild(node, "E", 6);
+
+			std::vector < std::string> results;
+
+			GeneralTree::Tree<int>::ForwardIterator iter;
+			for (iter = t.begin(); iter != t.end();iter++) {
+				results.push_back(iter->getKey());
+			}
+
+			std::vector<std::string> expected{ "Root","C","B","A","E","D" };
+			Assert::IsTrue(expected == results);
+		}
 	};
 }

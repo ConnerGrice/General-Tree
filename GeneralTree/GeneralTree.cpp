@@ -31,9 +31,39 @@ namespace GeneralTree {
 	}
 
 	template<class T>
-	std::vector<std::shared_ptr<Node<T>>> Tree<T>::scan() {
+	Tree<T>::ForwardIterator& Tree<T>::ForwardIterator::operator++() {
+		if (!node)
+			throw std::out_of_range("End of tree");
+		
+		if (node->lChild) {
+			forwardStack.push(node->lChild);
+			pointer temp = node->lChild;
+			while (temp->rSibling) {
+				forwardStack.push(temp->rSibling);
+				temp = temp->rSibling;
+			}
+		}
+
+		if (forwardStack.empty())
+			node = nullptr;
+		else {
+			node = forwardStack.top();
+			forwardStack.pop();
+		}
+		return *this;
+	}
+
+	template<class T>
+	Tree<T>::ForwardIterator Tree<T>::ForwardIterator::operator++(int) {
+		auto old = *this;
+		++(*this);
+		return old;
+	}
+
+	template<class T>
+	std::vector<std::shared_ptr<Node<T>>> Tree<T>::scan(std::shared_ptr<Node<T>> start) {
 		std::stack<std::shared_ptr<Node<T>>> subTree;
-		subTree.push(rootNode);
+		subTree.push(start);
 		std::vector<std::shared_ptr<Node<T>>> output;
 
 		while (!subTree.empty()) {

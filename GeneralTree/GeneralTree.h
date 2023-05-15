@@ -53,7 +53,6 @@ namespace GeneralTree {
 	/*Represents a collection of nodes linked together
 	via their left-most child and right siblings*/
 	template<class T> class Tree {
-
 		std::shared_ptr<Node<T>> newNode(std::shared_ptr<Node<T>>,std::string, T);
 
 		std::shared_ptr<Node<T>> rootNode;
@@ -62,10 +61,44 @@ namespace GeneralTree {
 		std::shared_ptr<Node<T>> breadthFirstSearch(std::string);
 	
 	public:
+		/*
+		An iterator that will scan through the nodes of the tree
+		*/
+		struct ForwardIterator {
+			using iterator_concept = std::forward_iterator_tag;
+			using difference_type = std::ptrdiff_t;
+			using value_type = Node<T>;
+			using pointer = std::shared_ptr<Node<T>>;
+			using reference = Node<T>&;
+
+			ForwardIterator() = default;
+			ForwardIterator(pointer ptr) : node(ptr) {};
+
+			reference operator*() const { return *node; };
+			pointer operator->() { return node; };
+
+			//Pre-order traversal
+			ForwardIterator& operator++();
+			ForwardIterator operator++(int);
+
+			friend bool operator==(const ForwardIterator& a,
+				const ForwardIterator& b) { return a.node == b.node; };
+			friend bool operator!=(const ForwardIterator& a,
+				const ForwardIterator& b) { return a.node != b.node; }
+			
+		private:
+			pointer node;
+			std::stack<pointer> forwardStack;
+		};
+
 		//Constructors
 		Tree() : rootNode(newNode(nullptr,"Root", 0)) {};
 		Tree(std::shared_ptr<Node<T>> root) : rootNode(root) {};
 		Tree(std::string key, T value) : rootNode(newNode(nullptr,key, value)) {};
+
+		//Iterator methods
+		ForwardIterator begin() { return ForwardIterator(rootNode); };
+		ForwardIterator end() { return ForwardIterator(nullptr); };
 
 		//Add nodes to existing nodes
 		void addSibling(std::shared_ptr<Node<T>>, std::string, T);
@@ -77,7 +110,8 @@ namespace GeneralTree {
 		std::shared_ptr<Node<T>> find(SearchMethods, std::string);
 		
 		//Get list of nodes in the post-order order
-		std::vector<std::shared_ptr<Node<T>>> scan();
+		std::vector<std::shared_ptr<Node<T>>> scan(std::shared_ptr<Node<T>> start);
+		inline std::vector<std::shared_ptr<Node<T>>> scan() { return scan(rootNode); };
 		
 		std::shared_ptr<Node<T>> getRoot() { return rootNode; };
 	};
